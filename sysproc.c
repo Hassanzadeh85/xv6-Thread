@@ -8,7 +8,7 @@
 #include "proc.h"
 
 int
-sys_fork(void)
+sys_fork(void) 
 {
   return fork();
 }
