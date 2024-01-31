@@ -3,7 +3,7 @@ struct rtcdate;
 
 //********************************
 typedef struct t_lock
-{
+{ 
 	uint flag;
 } t_lock;       
 //********************************
