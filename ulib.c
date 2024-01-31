@@ -4,7 +4,7 @@
 #include "user.h"
 #include "x86.h"
 #define PGSIZE 0x1000
-
+ 
 //**************************************************************************
 	int create_thread(void (*fnc)(void *), void *arg)
 	{
