@@ -3,15 +3,15 @@ The xv6 operating system is an educational operating system designed for student
 This operating system is inspired by the Unix v6 operating system and is designed to be implemented on x86 systems.
 Using the following commands, you can install this operating system on the Linux operating system:
 
-sudo apt update
+`sudo apt update`
 
-sudo apt install qemu
+`sudo apt install qemu`
 
-git clone git://github.com/mit-pdos/xv6-public.git
+`git clone git://github.com/mit-pdos/xv6-public.git`
 
-make
+`make`
 
-make qemu
+`make qemu`
 
 The purpose of this project is to add support for creating threads in the xv6 operating system.
 To achieve this, we need to define two system calls: `clone` and `join`. 
@@ -43,10 +43,45 @@ This function prevents concurrency. The main thread waits for the created thread
 # user.h
 One of the header files in the xv6 operating system contains a list of functions that can be called in the kernel. 
 System calls should also be added to this file.
-
-
-
-
+# ulib.c
+We need to define the user-space functions that we added to the `user.h` file in this file. 
+To create a new thread, we define the `create_thread` function as follows:
+```
+int create_thread(void (*fnc)(void *), void *arg)
+{
+char *stack = sbrk(PGSIZE);   
+ return clone(fnc,arg,stack);     
+}
+```
+In the above-defined function, the `sbrk` function allows the program to extend the end of the memory block by a specified amount. In this function, the memory block used for the memory stack is increased by one page.
+The join function is defined as follows:
+```
+int join_thread(void) 
+     {
+        return join(); 
+        }
+```
+The lock definition function is defined as follows. In this function, the value of flag is set to zero.
+```
+void init_lock(struct t_lock *xlock)
+ {
+	xlock->flag = 0;
+}
+```
+We define the lock acquisition function as follows. In this function, we define a spin lock that repeatedly tries to obtain the lock until it successfully acquires it.
+```
+void acquire_lock(struct t_lock *xlock)
+ {
+    while(xchg(&xlock->flag, 1) != 0);
+}
+```
+The lock release function is also defined as follows, in which zero is exchanged with the value of the lock:
+```
+void release_lock(struct t_lock *xlock)
+ {
+	xchg(&xlock->flag, 0);
+ }
+```
 
 
 
